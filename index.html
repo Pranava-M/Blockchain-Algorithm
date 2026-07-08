@@ -47,6 +47,16 @@ a{color:var(--accent);text-decoration:underline;text-decoration-color:var(--line
 a:hover{color:var(--ink);}
 ::selection{background:var(--ink);color:var(--bg);}
 
+/* ---------- Scroll progress ---------- */
+.scroll-progress{position:fixed;top:0;left:0;height:2px;background:var(--accent);width:0%;z-index:200;transition:width .1s linear;}
+
+/* ---------- Scroll reveal ---------- */
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .7s cubic-bezier(.22,1,.36,1), transform .7s cubic-bezier(.22,1,.36,1);}
+.reveal.in-view{opacity:1;transform:translateY(0);}
+@media (prefers-reduced-motion:reduce){
+  .reveal{opacity:1;transform:none;transition:none;}
+}
+
 /* ---------- Scrollbar ---------- */
 ::-webkit-scrollbar{width:10px;height:10px;}
 ::-webkit-scrollbar-track{background:var(--bg-2);}
@@ -264,23 +274,18 @@ nav a:hover{
   line-height:1.7;
 }
 .hero-sub b{color:var(--ink);}
-.hash-strip{
-  margin-top:40px;
-  font-family:var(--mono);
-  font-size:11px;
-  color:var(--muted);
-  display:flex;
-  flex-wrap:wrap;
-  gap:8px 20px;
-  letter-spacing:.02em;
-}
-.hash-strip span{
-  background:none;
-  padding:0;
-  border-radius:0;
-  border:none;
-  border-bottom:1px solid var(--line-soft);
-}
+
+/* ---------- Hero visual (chain illustration) ---------- */
+.hero-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:40px;align-items:center;}
+@media (max-width:900px){.hero-grid{grid-template-columns:1fr;}}
+.hero-visual{display:flex;justify-content:center;align-items:center;padding:10px;}
+.hero-visual svg{width:100%;max-width:300px;height:auto;}
+.chain-block{transform-box:fill-box;transform-origin:center;}
+.chain-block rect{transition:transform .35s cubic-bezier(.22,1,.36,1), stroke .3s ease;}
+.chain-block:hover rect{transform:translateY(-4px);stroke:var(--accent);}
+.chain-link{stroke-dasharray:6 4;animation:dash 3s linear infinite;}
+@keyframes dash{to{stroke-dashoffset:-20;}}
+@media (max-width:900px){.hero-visual{padding-top:20px;}}
 
 /* ---------- Chips ---------- */
 .chip-row{
@@ -329,9 +334,9 @@ nav a:hover{
   border-radius:0;
   padding:28px;
   box-shadow:none;
-  transition:border-color .2s;
+  transition:border-color .3s cubic-bezier(.22,1,.36,1), transform .3s cubic-bezier(.22,1,.36,1), box-shadow .3s ease;
 }
-.panel:hover{border-color:var(--ink);}
+.panel:hover{border-color:var(--ink);transform:translateY(-3px);box-shadow:0 10px 24px -16px rgba(28,26,21,0.35);}
 .panel h4{
   font-family:var(--mono);
   font-size:10px;
@@ -394,11 +399,12 @@ nav a:hover{
   border:1px solid var(--line-soft);
   border-radius:0;
   padding:16px 18px;
-  transition:border-color .2s;
+  transition:border-color .3s cubic-bezier(.22,1,.36,1), transform .3s cubic-bezier(.22,1,.36,1);
   cursor:default;
 }
 .chain-card:hover{
   border-color:var(--ink);
+  transform:translateY(-2px);
 }
 .chain-card .top{
   display:flex;
@@ -677,6 +683,20 @@ td.highlight{
 }
 #triSvgHolder svg{filter:none;}
 
+/* ---------- Network illustration (intro) ---------- */
+.network-illustration{flex:1;min-width:220px;display:flex;align-items:center;justify-content:center;background:var(--panel);border:1px solid var(--line);padding:12px;}
+.network-illustration svg{width:100%;max-width:230px;height:auto;}
+.network-illustration .node-dot circle{animation:nodePulse 2.6s ease-in-out infinite;}
+.network-illustration .node-dot circle:nth-child(2){animation-delay:.3s;}
+.network-illustration .node-dot circle:nth-child(3){animation-delay:.6s;}
+.network-illustration .node-dot circle:nth-child(4){animation-delay:.9s;}
+.network-illustration .node-dot circle:nth-child(5){animation-delay:1.2s;}
+.network-illustration .node-dot circle:nth-child(6){animation-delay:1.5s;}
+@keyframes nodePulse{0%,100%{opacity:1;}50%{opacity:.55;}}
+@media (prefers-reduced-motion:reduce){
+  .network-illustration .node-dot circle{animation:none;}
+}
+
 /* ---------- Footer ---------- */
 footer{
   padding:48px 0 60px;
@@ -745,9 +765,11 @@ footer a{color:var(--accent);}
 
 /* ---------- Attack cards ---------- */
 .attack-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;margin-top:24px;}
-.attack-card{background:var(--panel);border:1px solid var(--line-soft);border-radius:0;padding:20px 22px;transition:border-color .2s;}
-.attack-card:hover{border-color:var(--accent);}
+.attack-card{background:var(--panel);border:1px solid var(--line-soft);border-radius:0;padding:20px 22px;transition:border-color .3s cubic-bezier(.22,1,.36,1), transform .3s cubic-bezier(.22,1,.36,1);}
+.attack-card:hover{border-color:var(--accent);transform:translateY(-3px);}
 .attack-card .aname{font-family:var(--serif);font-weight:600;font-size:16px;color:var(--accent);display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.attack-card .aname svg{flex:0 0 auto;transition:transform .3s cubic-bezier(.22,1,.36,1);}
+.attack-card:hover .aname svg{transform:rotate(-6deg) scale(1.08);}
 .attack-card p{font-size:13px;color:var(--muted);line-height:1.6;margin:0;}
 .attack-card .mitig{margin-top:10px;font-size:12px;color:var(--teal);border-top:1px dashed var(--line-soft);padding-top:10px;}
 
@@ -807,6 +829,8 @@ table.variant-table td.ex{font-family:var(--mono);font-size:12px;color:var(--acc
 </head>
 <body>
 
+<div class="scroll-progress" id="scrollProgress"></div>
+
 <header>
   <div class="nav-inner">
     <div class="brand">consensus<span>::</span>explorer</div>
@@ -832,10 +856,42 @@ table.variant-table td.ex{font-family:var(--mono);font-size:12px;color:var(--acc
 
   <!-- HERO -->
   <section class="block hero" id="top">
-    <div class="eyebrow">Genesis Block — Introduction</div>
-    <h1>Consensus Algorithms in Blockchain<br><em>— A Comparative Explorer.</em></h1>
-    <p class="hero-sub">Every blockchain is a room full of strangers who must agree on one shared truth without a referee. This page walks through <b>how</b> they agree, <b>what it costs</b> them, and <b>which real networks</b> made each trade-off — click an algorithm below and every panel updates together.</p>
-    <div class="hash-strip" id="hashStrip"></div>
+    <div class="hero-grid">
+      <div class="reveal">
+        <div class="eyebrow">Genesis Block — Introduction</div>
+        <h1>Consensus Algorithms in Blockchain<br><em>— A Comparative Explorer.</em></h1>
+        <p class="hero-sub">Every blockchain is a room full of strangers who must agree on one shared truth without a referee. This page walks through <b>how</b> they agree, <b>what it costs</b> them, and <b>which real networks</b> made each trade-off — click an algorithm below and every panel updates together.</p>
+      </div>
+      <div class="hero-visual reveal" style="transition-delay:.12s;">
+        <svg viewBox="0 0 220 160" xmlns="http://www.w3.org/2000/svg">
+          <line class="chain-link" x1="40" y1="80" x2="98" y2="80" stroke="#c9bc9c" stroke-width="2"/>
+          <line class="chain-link" x1="122" y1="80" x2="180" y2="80" stroke="#c9bc9c" stroke-width="2"/>
+          <g class="chain-block">
+            <rect x="10" y="52" width="60" height="56" rx="0" fill="#faf7ef" stroke="#c9bc9c" stroke-width="1.5"/>
+            <text x="40" y="75" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#6b6250">BLOCK</text>
+            <text x="40" y="90" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#a8371f" font-weight="700">#N-1</text>
+          </g>
+          <g class="chain-block">
+            <rect x="80" y="40" width="60" height="70" rx="0" fill="#faf7ef" stroke="#1c1a15" stroke-width="2"/>
+            <text x="110" y="66" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#6b6250">BLOCK</text>
+            <text x="110" y="81" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="#a8371f" font-weight="700">#N</text>
+            <line x1="90" y1="90" x2="130" y2="90" stroke="#c9bc9c" stroke-width="1"/>
+            <text x="110" y="101" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="7" fill="#6b6250">hash: 4f9a...</text>
+          </g>
+          <g class="chain-block">
+            <rect x="150" y="52" width="60" height="56" rx="0" fill="#faf7ef" stroke="#c9bc9c" stroke-width="1.5" stroke-dasharray="4 3"/>
+            <text x="180" y="75" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#6b6250">BLOCK</text>
+            <text x="180" y="90" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#6b6250" font-weight="700">#N+1</text>
+          </g>
+          <circle cx="40" cy="128" r="3" fill="#1f4d3d"/>
+          <circle cx="110" cy="128" r="3" fill="#1f4d3d"/>
+          <circle cx="180" cy="128" r="3" fill="#1f4d3d"/>
+          <line x1="40" y1="128" x2="110" y2="128" stroke="#1f4d3d" stroke-width="1" opacity=".4"/>
+          <line x1="110" y1="128" x2="180" y2="128" stroke="#1f4d3d" stroke-width="1" opacity=".4"/>
+          <text x="110" y="148" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#6b6250" letter-spacing="1">NODES · IN SYNC</text>
+        </svg>
+      </div>
+    </div>
   </section>
 
   <!-- WHAT IS CONSENSUS -->
@@ -844,9 +900,34 @@ table.variant-table td.ex{font-family:var(--mono);font-size:12px;color:var(--acc
     <h2>Agreement without a referee</h2>
     <p class="lede">In a normal database, one company owns the machine and its word is final. A blockchain has no owner — thousands of independent computers ("nodes") hold copies of the same ledger. A <b>consensus algorithm</b> is the rulebook they all follow to agree on which transactions happened, in which order, without trusting each other or any central authority.</p>
 
-    <div class="def-box">
-      <span class="label">Definition</span>
-      <p><b>Consensus</b> is the process by which a distributed network of independent nodes, none of whom trust each other, arrives at a single, agreed-upon version of the ledger — and stays protected from anyone rewriting history or spending the same coin twice (the "double-spend problem").</p>
+    <div class="tri-wrap" style="align-items:stretch;">
+      <div class="def-box" style="flex:1.3;min-width:280px;margin:0;">
+        <span class="label">Definition</span>
+        <p><b>Consensus</b> is the process by which a distributed network of independent nodes, none of whom trust each other, arrives at a single, agreed-upon version of the ledger — and stays protected from anyone rewriting history or spending the same coin twice (the "double-spend problem").</p>
+      </div>
+      <div class="network-illustration">
+        <svg viewBox="0 0 220 170" xmlns="http://www.w3.org/2000/svg">
+          <g stroke="#c9bc9c" stroke-width="1">
+            <line x1="110" y1="30" x2="45" y2="80"/>
+            <line x1="110" y1="30" x2="175" y2="80"/>
+            <line x1="110" y1="30" x2="110" y2="140"/>
+            <line x1="45" y1="80" x2="175" y2="80"/>
+            <line x1="45" y1="80" x2="110" y2="140"/>
+            <line x1="175" y1="80" x2="110" y2="140"/>
+            <line x1="45" y1="80" x2="30" y2="140"/>
+            <line x1="175" y1="80" x2="190" y2="140"/>
+          </g>
+          <g class="node-dot">
+            <circle cx="110" cy="30" r="9" fill="#faf7ef" stroke="#1c1a15" stroke-width="1.6"/>
+            <circle cx="45" cy="80" r="9" fill="#faf7ef" stroke="#1f4d3d" stroke-width="1.6"/>
+            <circle cx="175" cy="80" r="9" fill="#faf7ef" stroke="#1f4d3d" stroke-width="1.6"/>
+            <circle cx="110" cy="140" r="9" fill="#faf7ef" stroke="#1f4d3d" stroke-width="1.6"/>
+            <circle cx="30" cy="140" r="6" fill="#faf7ef" stroke="#a8371f" stroke-width="1.6"/>
+            <circle cx="190" cy="140" r="6" fill="#faf7ef" stroke="#a8371f" stroke-width="1.6"/>
+          </g>
+          <text x="110" y="163" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#6b6250" letter-spacing=".5">NO CENTRAL NODE — EVERY PEER AGREES</text>
+        </svg>
+      </div>
     </div>
 
     <h3>Generic consensus flow</h3>
@@ -933,32 +1014,32 @@ table.variant-table td.ex{font-family:var(--mono);font-size:12px;color:var(--acc
 
     <div class="attack-grid">
       <div class="attack-card">
-        <div class="aname">51% Attack</div>
+        <div class="aname"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2 3 6v6c0 5 4 9 9 10 5-1 9-5 9-10V6l-9-4Z" stroke="currentColor" stroke-width="1.6"/><path d="M8 12h8M12 8v8" stroke="currentColor" stroke-width="1.6"/></svg>51% Attack</div>
         <p>An attacker who controls the majority of the network's mining power (PoW) or staked coins (PoS) can rewrite recent history and double-spend coins by out-producing the honest chain.</p>
         <div class="mitig">Mitigation: make majority control prohibitively expensive — via real hardware/energy cost (PoW) or slashed capital (PoS).</div>
       </div>
       <div class="attack-card">
-        <div class="aname">Sybil Attack</div>
+        <div class="aname"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="7" cy="8" r="3" stroke="currentColor" stroke-width="1.6"/><circle cx="17" cy="8" r="3" stroke="currentColor" stroke-width="1.6"/><path d="M2 20c0-3 2.5-5 5-5s5 2 5 5M12 20c0-3 2.5-5 5-5s5 2 5 5" stroke="currentColor" stroke-width="1.6"/></svg>Sybil Attack</div>
         <p>An attacker creates a huge number of fake node identities to gain disproportionate voting or influence power over the network, since a permissionless network can't verify "one node = one real entity."</p>
         <div class="mitig">Mitigation: tie influence to a scarce resource (computation, stake, or verified identity) that can't be freely duplicated.</div>
       </div>
       <div class="attack-card">
-        <div class="aname">Eclipse Attack</div>
+        <div class="aname"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M12 3a9 9 0 0 0 0 18 9 9 0 0 1 0-18Z" fill="currentColor" opacity=".7"/></svg>Eclipse Attack</div>
         <p>An attacker surrounds a single victim node with malicious peers, controlling every connection it has — feeding it a false view of the network to enable double-spends or wasted mining effort.</p>
         <div class="mitig">Mitigation: diverse, randomised peer selection and a minimum number of outbound connections to trusted-ish sources.</div>
       </div>
       <div class="attack-card">
-        <div class="aname">Long-Range Attack</div>
+        <div class="aname"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M12 7v5l3.5 2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M4 4 2 2m18 2 2-2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>Long-Range Attack</div>
         <p>Mainly a PoS concern: an attacker acquires old private keys that once held a large stake and rebuilds an alternate chain from far in the past, since old stake is now cheap/worthless to acquire.</p>
         <div class="mitig">Mitigation: checkpointing and "weak subjectivity" — new nodes trust a recent, socially-agreed checkpoint rather than replaying from genesis.</div>
       </div>
       <div class="attack-card">
-        <div class="aname">Nothing-at-Stake</div>
+        <div class="aname"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 3v18M6 8l-4 8h8l-4-8Zm12 0-4 8h8l-4-8Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M4 21h16" stroke="currentColor" stroke-width="1.6"/></svg>Nothing-at-Stake</div>
         <p>Early PoS concern: because voting costs almost nothing, validators could cheaply vote on every competing fork simultaneously, weakening the guarantee that only one history wins.</p>
         <div class="mitig">Mitigation: slashing — validators lose real staked funds for signing conflicting blocks, making forking costly again.</div>
       </div>
       <div class="attack-card">
-        <div class="aname">Selfish Mining</div>
+        <div class="aname"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M14 3 5 14h6l-2 7 9-11h-6l2-7Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>Selfish Mining</div>
         <p>A PoW miner secretly withholds a found block and keeps mining a private lead, releasing blocks strategically to waste honest miners' effort and earn disproportionate rewards.</p>
         <div class="mitig">Mitigation: propagation-timing rules and tie-breaking policies that reduce the payoff of withholding blocks.</div>
       </div>
@@ -1659,19 +1740,6 @@ document.querySelectorAll('.acc-item .acc-q').forEach(q=>{
   });
 });
 
-/* ============ RENDER: hash strip decoration ============ */
-(function(){
-  const strip = document.getElementById('hashStrip');
-  const chars = '0123456789abcdef';
-  let html='';
-  for(let i=0;i<6;i++){
-    let h='';
-    for(let j=0;j<16;j++) h+= chars[Math.floor(Math.random()*16)];
-    html += `<span>#${h}</span>`;
-  }
-  strip.innerHTML = html;
-})();
-
 /* ============ RENDER: compatibility matrix ============ */
 function renderMatrix(){
   const table = document.getElementById('matrixTable');
@@ -1720,6 +1788,38 @@ selB.addEventListener('change', updateChecker);
 /* ============ init ============ */
 selectAlgo('pow');
 updateChecker();
+
+/* ============ scroll progress bar ============ */
+(function(){
+  const bar = document.getElementById('scrollProgress');
+  function update(){
+    const h = document.documentElement;
+    const scrolled = h.scrollTop;
+    const max = h.scrollHeight - h.clientHeight;
+    bar.style.width = max > 0 ? (scrolled/max*100) + '%' : '0%';
+  }
+  window.addEventListener('scroll', update, {passive:true});
+  update();
+})();
+
+/* ============ scroll reveal ============ */
+(function(){
+  document.querySelectorAll('section.block:not(.hero)').forEach(el=>el.classList.add('reveal'));
+  const targets = document.querySelectorAll('.reveal');
+  if('IntersectionObserver' in window){
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(entry=>{
+        if(entry.isIntersecting){
+          entry.target.classList.add('in-view');
+          io.unobserve(entry.target);
+        }
+      });
+    },{threshold:0.12, rootMargin:'0px 0px -60px 0px'});
+    targets.forEach(t=>io.observe(t));
+  } else {
+    targets.forEach(t=>t.classList.add('in-view'));
+  }
+})();
 </script>
 </body>
 </html>
